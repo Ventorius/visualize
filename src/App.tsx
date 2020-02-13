@@ -1,33 +1,22 @@
-import React, { useEffect } from 'react';
-import { fetchData } from './utils/api';
+import React from 'react';
 import styled from 'styled-components';
 
 import Filters from './components/Filters';
 import Chart from './components/Chart';
+import { useChartData } from './utils/hooks';
 
 const Wrapper = styled.div`
   height: 800px;
   display: flex;
 `;
 
-const ChartWrapper = styled.div`
-  width: 75%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const App = () => {
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const data = useChartData();
 
   return (
     <Wrapper>
       <Filters />
-      <ChartWrapper>
-        <Chart />
-      </ChartWrapper>
+      <Chart />
     </Wrapper>
   );
 };
