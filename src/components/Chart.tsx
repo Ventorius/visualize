@@ -19,7 +19,7 @@ const Chart: FC<Props> = ({ data }) => {
     <Wrapper>
       <ResponsiveContainer>
         <LineChart
-          data={data.slice(200, 400)}
+          data={data.slice(0, 400)}
           margin={{
             top: 5,
             right: 30,

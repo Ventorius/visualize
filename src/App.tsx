@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 
 import Filters from './components/Filters';
 import Chart from './components/Chart';
@@ -12,6 +13,14 @@ const Wrapper = styled.div`
   display: flex;
 `;
 
+const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+  }
+`;
+
 const App = () => {
   const data = useChartData();
 
@@ -20,10 +29,13 @@ const App = () => {
   }
 
   return (
-    <Wrapper>
-      <Filters />
-      <Chart data={data} />
-    </Wrapper>
+    <>
+      <GlobalStyle />
+      <Wrapper>
+        <Filters />
+        <Chart data={data} />
+      </Wrapper>
+    </>
   );
 };
 
