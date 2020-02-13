@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import {} from 'react-select';
 
 import GlobalStyle from './GlobalStyle';
 import Filters from './components/Filters';
@@ -14,11 +15,16 @@ const Wrapper = styled.div`
   display: flex;
 `;
 
+interface Option {
+  label: string;
+  value: string;
+}
+
 const App: FC = () => {
   const chartData = useChartData();
   const [filteredChartData, setFilteredChartData] = useState<null | Row[]>(null);
 
-  const [datasource, setDatasource] = useState<[] | string[]>([]);
+  const [datasource, setDatasource] = useState<string[]>([]);
   const [campaign, setCampaign] = useState<null | string>(null);
 
   const [datasourceOptions, setDatasourceOptions] = useState<[] | string[]>([]);
@@ -33,19 +39,18 @@ const App: FC = () => {
     const campaigns = data.filter(item => datasources.includes(item.Datasource)).map(item => item.Campaign);
     return Array.from(new Set(campaigns));
   };
-  // @ts-ignore
-  const handleDatasourceChange = e => {
-    if (e?.length > 0) {
-      // @ts-ignore
-      setDatasource(e.map(item => item.value));
+
+  const handleDatasourceChange = (options: Option[]) => {
+    if (options?.length > 0) {
+      setDatasource(options.map(item => item.value));
     } else {
       setDatasource([]);
       setCampaign(null);
     }
   };
-  // @ts-ignore
-  const handleCampaignChange = e => {
-    setCampaign(e.value);
+
+  const handleCampaignChange = (option: Option) => {
+    setCampaign(option.value);
   };
 
   const applyFilters = () => {
@@ -53,20 +58,14 @@ const App: FC = () => {
       return setFilteredChartData(chartData);
     }
 
-    console.log({ datasource, campaign });
     if (chartData?.length) {
-      const filteredByDatasource = chartData.filter(item => {
-        // @ts-ignore
-        return datasource.includes(item.Datasource);
-      });
+      const filteredByDatasource = chartData.filter(item => datasource.includes(item.Datasource));
 
       if (campaign === null) {
         return setFilteredChartData(filteredByDatasource);
       }
 
-      const filteredByCampaign = filteredByDatasource.filter(item => {
-        return item.Campaign === campaign;
-      });
+      const filteredByCampaign = filteredByDatasource.filter(item => item.Campaign === campaign);
 
       return setFilteredChartData(filteredByCampaign);
     }

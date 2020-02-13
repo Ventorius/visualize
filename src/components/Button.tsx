@@ -23,7 +23,11 @@ const Wrapper = styled.button`
   }
 `;
 
-const Button: FC = ({ children, ...props }) => {
+interface Props {
+  onClick: () => void;
+}
+
+const Button: FC<Props> = ({ children, ...props }) => {
   return <Wrapper {...props}>{children}</Wrapper>;
 };
 

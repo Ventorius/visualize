@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
 
@@ -34,11 +34,16 @@ const StyledSelect = styled(Select)`
 interface Props {
   campaignOptions: string[];
   datasourceOptions: string[];
-  handleCampaignChange: Dispatch<SetStateAction<[] | string[]>>;
-  handleDatasourceChange: Dispatch<SetStateAction<[] | string[]>>;
+  handleCampaignChange: (option: Option) => void;
+  handleDatasourceChange: (options: Option[]) => void;
   datasource: string[] | [];
   campaign: string | null;
   handleApplyFilters: () => void;
+}
+
+interface Option {
+  label: string;
+  value: string;
 }
 
 const Filters: FC<Props> = ({
@@ -50,6 +55,15 @@ const Filters: FC<Props> = ({
   datasource,
   handleApplyFilters,
 }) => {
+  const mapToOptions = (options: string[]): Option[] => {
+    return options.map(item => {
+      return {
+        label: item,
+        value: item,
+      };
+    });
+  };
+
   return (
     <Wrapper>
       <FormControl>
@@ -57,23 +71,10 @@ const Filters: FC<Props> = ({
         <StyledSelect
           closeMenuOnSelect={false}
           defaultValue={[]}
-          // @ts-ignore
-          value={datasource.map((item: string) => {
-            return {
-              label: item,
-              value: item,
-            };
-          })}
+          value={mapToOptions(datasource)}
           isMulti
           name="datasource"
-          options={datasourceOptions.map((item: string) => {
-            return {
-              label: item,
-              value: item,
-            };
-          })}
-          className="basic-multi-select"
-          classNamePrefix="select"
+          options={mapToOptions(datasourceOptions)}
           onChange={handleDatasourceChange}
         />
       </FormControl>
@@ -83,19 +84,10 @@ const Filters: FC<Props> = ({
           defaultValue={null}
           name="campaign"
           value={{ key: campaign, label: campaign }}
-          options={campaignOptions.map((item: string) => {
-            return {
-              label: item,
-              value: item,
-            };
-          })}
-          className="basic-multi-select"
-          classNamePrefix="select"
+          options={mapToOptions(campaignOptions)}
           onChange={handleCampaignChange}
         />
       </FormControl>
-      {/* 
-  // @ts-ignore */}
       <Button onClick={handleApplyFilters}>Apply filters</Button>
     </Wrapper>
   );
