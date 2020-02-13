@@ -55,12 +55,20 @@ const App: FC = () => {
 
     console.log({ datasource, campaign });
     if (chartData?.length) {
-      const newFilteredChartData = chartData.filter(item => {
+      const filteredByDatasource = chartData.filter(item => {
         // @ts-ignore
         return datasource.includes(item.Datasource);
       });
 
-      setFilteredChartData(newFilteredChartData);
+      if (campaign === null) {
+        return setFilteredChartData(filteredByDatasource);
+      }
+
+      const filteredByCampaign = filteredByDatasource.filter(item => {
+        return item.Campaign === campaign;
+      });
+
+      return setFilteredChartData(filteredByCampaign);
     }
   };
 
