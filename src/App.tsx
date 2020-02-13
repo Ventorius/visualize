@@ -1,13 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import {} from 'react-select';
 
 import GlobalStyle from './GlobalStyle';
 import Filters from './components/Filters';
 import Chart from './components/Chart';
 import Loader from './components/Loader';
 
-import { useChartData } from './utils/hooks';
+import { useCampaignOptions, useChartData, useDatasourceOptions } from './utils/hooks';
 import { Row } from './utils/api';
 
 const Wrapper = styled.div`
@@ -27,18 +26,8 @@ const App: FC = () => {
   const [datasource, setDatasource] = useState<string[]>([]);
   const [campaign, setCampaign] = useState<null | string>(null);
 
-  const [datasourceOptions, setDatasourceOptions] = useState<[] | string[]>([]);
-  const [campaignOptions, setCampaignOptions] = useState<[] | string[]>([]);
-
-  const getDataSourceOptions = (chartData: Row[]): string[] => {
-    const datasources = chartData.map(item => item.Datasource);
-    return Array.from(new Set(datasources));
-  };
-
-  const getCampaignOptionsForDataSources = (data: Row[], datasources: string[]) => {
-    const campaigns = data.filter(item => datasources.includes(item.Datasource)).map(item => item.Campaign);
-    return Array.from(new Set(campaigns));
-  };
+  const [datasourceOptions, setDatasourceOptions] = useDatasourceOptions([]);
+  const [campaignOptions, setCampaignOptions] = useCampaignOptions([]);
 
   const handleDatasourceChange = (options: Option[]) => {
     if (options?.length > 0) {
@@ -73,16 +62,13 @@ const App: FC = () => {
 
   useEffect(() => {
     if (chartData?.length) {
-      const campaigns = getCampaignOptionsForDataSources(chartData as Row[], datasource);
-      setCampaignOptions(campaigns);
+      setCampaignOptions(chartData, datasource);
     }
   }, [datasource]);
 
   useEffect(() => {
     if (chartData?.length) {
-      const options = getDataSourceOptions(chartData);
-      setDatasourceOptions(options);
-
+      setDatasourceOptions(chartData);
       setFilteredChartData(chartData);
     }
   }, [chartData]);
