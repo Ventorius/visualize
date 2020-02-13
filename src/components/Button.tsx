@@ -23,8 +23,8 @@ const Wrapper = styled.button`
   }
 `;
 
-const Button: FC = ({ children }) => {
-  return <Wrapper>{children}</Wrapper>;
+const Button: FC = ({ children, ...props }) => {
+  return <Wrapper {...props}>{children}</Wrapper>;
 };
 
 export default Button;

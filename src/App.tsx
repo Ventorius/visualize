@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { createGlobalStyle } from 'styled-components';
 
+import GlobalStyle from './GlobalStyle';
 import Filters from './components/Filters';
 import Chart from './components/Chart';
 import Loader from './components/Loader';
@@ -14,16 +14,9 @@ const Wrapper = styled.div`
   display: flex;
 `;
 
-const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
-  
-  body {
-    font-family: 'Roboto', sans-serif;
-  }
-`;
-
-const App = () => {
+const App: FC = () => {
   const chartData = useChartData();
+  const [filteredChartData, setFilteredChartData] = useState<null | Row[]>(null);
 
   const [datasource, setDatasource] = useState<[] | string[]>([]);
   const [campaign, setCampaign] = useState<null | string>(null);
@@ -31,12 +24,12 @@ const App = () => {
   const [datasourceOptions, setDatasourceOptions] = useState<[] | string[]>([]);
   const [campaignOptions, setCampaignOptions] = useState<[] | string[]>([]);
 
-  const getDataSources = (chartData: Row[]): string[] => {
+  const getDataSourceOptions = (chartData: Row[]): string[] => {
     const datasources = chartData.map(item => item.Datasource);
     return Array.from(new Set(datasources));
   };
 
-  const getCampaignsForDataSources = (data: Row[], datasources: string[]) => {
+  const getCampaignOptionsForDataSources = (data: Row[], datasources: string[]) => {
     const campaigns = data.filter(item => datasources.includes(item.Datasource)).map(item => item.Campaign);
     return Array.from(new Set(campaigns));
   };
@@ -55,21 +48,39 @@ const App = () => {
     setCampaign(e.value);
   };
 
+  const applyFilters = () => {
+    if (datasource.length === 0) {
+      return setFilteredChartData(chartData);
+    }
+
+    console.log({ datasource, campaign });
+    if (chartData?.length) {
+      const newFilteredChartData = chartData.filter(item => {
+        // @ts-ignore
+        return datasource.includes(item.Datasource);
+      });
+
+      setFilteredChartData(newFilteredChartData);
+    }
+  };
+
   useEffect(() => {
     if (chartData?.length) {
-      const campaigns = getCampaignsForDataSources(chartData as Row[], datasource);
+      const campaigns = getCampaignOptionsForDataSources(chartData as Row[], datasource);
       setCampaignOptions(campaigns);
     }
   }, [datasource]);
 
   useEffect(() => {
     if (chartData?.length) {
-      const options = getDataSources(chartData);
+      const options = getDataSourceOptions(chartData);
       setDatasourceOptions(options);
+
+      setFilteredChartData(chartData);
     }
   }, [chartData]);
 
-  if (!chartData) {
+  if (!filteredChartData || !chartData) {
     return <Loader />;
   }
 
@@ -84,8 +95,9 @@ const App = () => {
           handleCampaignChange={handleCampaignChange}
           datasource={datasource}
           campaign={campaign}
+          handleApplyFilters={applyFilters}
         />
-        <Chart data={chartData} />
+        <Chart data={filteredChartData} />
       </Wrapper>
     </>
   );

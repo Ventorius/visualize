@@ -38,9 +38,18 @@ interface Props {
   handleDatasourceChange: Dispatch<SetStateAction<[] | string[]>>;
   datasource: string[] | [];
   campaign: string | null;
+  handleApplyFilters: () => void;
 }
 
-const Filters: FC<Props> = ({ datasourceOptions, campaignOptions, handleCampaignChange, handleDatasourceChange, campaign, datasource }) => {
+const Filters: FC<Props> = ({
+  datasourceOptions,
+  campaignOptions,
+  handleCampaignChange,
+  handleDatasourceChange,
+  campaign,
+  datasource,
+  handleApplyFilters,
+}) => {
   return (
     <Wrapper>
       <FormControl>
@@ -68,7 +77,6 @@ const Filters: FC<Props> = ({ datasourceOptions, campaignOptions, handleCampaign
           onChange={handleDatasourceChange}
         />
       </FormControl>
-
       <FormControl>
         <Label>Campaign</Label>
         <StyledSelect
@@ -86,7 +94,9 @@ const Filters: FC<Props> = ({ datasourceOptions, campaignOptions, handleCampaign
           onChange={handleCampaignChange}
         />
       </FormControl>
-      <Button>Apply filters</Button>
+      {/* 
+  // @ts-ignore */}
+      <Button onClick={handleApplyFilters}>Apply filters</Button>
     </Wrapper>
   );
 };
