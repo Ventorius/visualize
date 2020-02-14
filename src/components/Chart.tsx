@@ -33,8 +33,8 @@ const Chart: FC<Props> = ({ data }) => {
           <YAxis yAxisId="right" orientation="right" />
           <Tooltip />
           <Legend />
-          <Line yAxisId="left" type="linear" dataKey="Clicks" stroke="#8884d8" dot={false} />
-          <Line yAxisId="right" type="linear" dataKey="Impressions" stroke="#82ca9d" dot={false} />
+          <Line yAxisId="left" type="linear" dataKey="Clicks" stroke="#8884d8" strokeWidth={2} dot={false} />
+          <Line yAxisId="right" type="linear" dataKey="Impressions" stroke="#82ca9d" strokeWidth={2} dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </Wrapper>

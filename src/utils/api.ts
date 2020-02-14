@@ -13,7 +13,6 @@ export interface Option {
   value: string;
 }
 
-
 const URL = 'http://adverity-challenge.s3-website-eu-west-1.amazonaws.com/DAMKBAoDBwoDBAkOBAYFCw.csv';
 
 const csvToJson = (data: string) => {
