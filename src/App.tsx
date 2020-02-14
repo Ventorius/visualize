@@ -7,17 +7,12 @@ import Chart from './components/Chart';
 import Loader from './components/Loader';
 
 import { useCampaignOptions, useChartData, useDatasourceOptions } from './utils/hooks';
-import { Row } from './utils/api';
+import { Option, Row } from './utils/api';
 
 const Wrapper = styled.div`
   height: 800px;
   display: flex;
 `;
-
-interface Option {
-  label: string;
-  value: string;
-}
 
 const App: FC = () => {
   const chartData = useChartData();
@@ -38,9 +33,7 @@ const App: FC = () => {
     }
   };
 
-  const handleCampaignChange = (option: Option) => {
-    setCampaign(option.value);
-  };
+  const handleCampaignChange = (option: Option) => setCampaign(option.value);
 
   const applyFilters = () => {
     if (datasource.length === 0) {
@@ -58,6 +51,12 @@ const App: FC = () => {
 
       return setFilteredChartData(filteredByCampaign);
     }
+  };
+
+  const handleResetFilters = () => {
+    setCampaign(null);
+    setDatasource([]);
+    setFilteredChartData(chartData);
   };
 
   useEffect(() => {
@@ -89,6 +88,7 @@ const App: FC = () => {
           datasource={datasource}
           campaign={campaign}
           handleApplyFilters={applyFilters}
+          handleResetFilters={handleResetFilters}
         />
         <Chart data={filteredChartData} />
       </Wrapper>

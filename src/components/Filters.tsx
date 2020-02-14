@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Select from 'react-select';
 
 import Button from './Button';
+import { Option } from '../utils/api';
 
 //region styled
 
@@ -39,11 +40,7 @@ interface Props {
   datasource: string[] | [];
   campaign: string | null;
   handleApplyFilters: () => void;
-}
-
-interface Option {
-  label: string;
-  value: string;
+  handleResetFilters: () => void;
 }
 
 const Filters: FC<Props> = ({
@@ -54,6 +51,7 @@ const Filters: FC<Props> = ({
   campaign,
   datasource,
   handleApplyFilters,
+  handleResetFilters,
 }) => {
   const mapToOptions = (options: string[]): Option[] => {
     return options.map(item => {
@@ -89,6 +87,9 @@ const Filters: FC<Props> = ({
         />
       </FormControl>
       <Button onClick={handleApplyFilters}>Apply filters</Button>
+      <Button hollow onClick={handleResetFilters}>
+        Reset filters
+      </Button>
     </Wrapper>
   );
 };
